@@ -30,5 +30,12 @@ public class CustomerServiceImpl implements CustomerService {
 	public void deleteCustomer(Integer idCustomer) {
 		customerrService.deleteById(idCustomer);
 	}
+	
+	public Integer findCustomerDoc(String documentCustomer)
+	{
+		 Integer idCustomer= customerrService.findCustomerDoc(documentCustomer);
+		 
+		 return idCustomer;
+	}
 
 }

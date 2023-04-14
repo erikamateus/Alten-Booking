@@ -1,10 +1,14 @@
 package co.com.alten.booking.service.impl;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import co.com.alten.booking.dto.RoomAvailable;
@@ -37,53 +41,88 @@ public class BookingServiceImpl implements BookingService {
 	}
 
 	@Override
-	public List<RoomAvailable> findAvailableRoom(Integer room, LocalDate startDate, LocalDate endDate) {
-		
-		
-	List<Booking> reservedDates = bookingService.findAvailableDates(room, "", "");
-		
-		
-		/*List<RoomAvailable> addListaRoom = new ArrayList<>() ;
-		
-	
-		for (Booking listBusyBooking : reservedDates) {
-			
-			//RoomAvailable  addRoomAvailable = RoomAvailable.builder().dateAvailable(listBusyBooking.getCheckIn()).numberRoom(listBusyBooking.getRoom().getNumberRoom()).build();
-			
-			
-	       // List<Integer> excludedDays = Arrays.asList(16, 30);
-			
+	public List<Booking> findAvailableRoom(Integer room, LocalDate startDate, LocalDate endDate) {
 
-	        // Recorrer todos los días del mes y mostrar los días terminados en pares, excluyendo los días en la lista de exclusión
-	        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyyyy");
-	        
-	        for (int i = 1; i <= startDate.lengthOfMonth(); i++) {
-	        	
-	            LocalDate date = LocalDate.of(year, month, i);
-	            
-	            int day = date.getDayOfMonth();
-	            if (day % 2 == 0 && !reservedDates.contains(day)) {
-	                String formattedDate = date.format(formatter);
-	                System.out.println(formattedDate);
-	                
-	                reservedDates.add(addRoomAvailable);
-	            }
-	        }
+		// conditions
+		List<Booking> reservedDates = new ArrayList<>();
+		List<Booking> excludedDays = new ArrayList<>();
 
-	        
-			
+		if (dateRangeValidation(startDate, endDate)) {
+			// make a list with 30 days
+			LocalDate todayDate = LocalDate.now();
+			LocalDate endDate30Days = todayDate.plusDays(30);
+			List<Booking> existDatesBoookings = bookingService.findAvailableDates(room, startDate, endDate30Days);
+			if (!isAvailableRoom(room, startDate, endDate)) {
+				for (Booking BusyBooking : existDatesBoookings) {
+					if (isAvailableRoom(BusyBooking.getRoom().getIdRoom(),
+							convertDateToLocaldate(BusyBooking.getCheckIn()),
+							convertDateToLocaldate(BusyBooking.getCheckOut()))) {
+						// lleno la lista con los que no se pueden
+						excludedDays.add(BusyBooking);
+					} else {
+						reservedDates.add(BusyBooking);
+						// lleno la lista con los que SI se pueden
+					}
+				}
+			} else {
+				throw new RuntimeException("Room is not available for the requested dates");
+			}
+
 		}
-		*/
-		
-		
-		 
-		return null;
+
+		return reservedDates;
+
+	}
+
+	private boolean isAvailableRoom(Integer room, LocalDate startDate, LocalDate endDate) {
+		// busco si existe el dia con los parametros
+		List<Booking> existDatesBoookings = bookingService.existingBookings(room, startDate, endDate);
+		return existDatesBoookings.isEmpty();
+		// validar entrada de datos. no mas de 3 dias en reservar, y no mayor a 30 dias
+		// los dias que puede seleccionar
+
+	}
+
+
+
+	@Override
+	public Booking createUpdateBooking(Booking booking) {
+
+		if (!isAvailableRoom(booking.getRoom().getIdRoom(), convertDateToLocaldate(booking.getCheckIn()),
+				convertDateToLocaldate(booking.getCheckOut()))) {
+			throw new RuntimeException("Room is not available for the requested dates");
+		}
+
+		bookingService.save(booking);
+		return booking;
 	}
 
 	@Override
-	public void createBooking(Booking booking) {
+	public boolean dateRangeValidation(LocalDate startDate, LocalDate endDate) {
 
-		bookingService.save(booking);
+		// Busco que no sea superior a 30 dias la fecha inicial
+		if (startDate.isBefore(LocalDate.now().plusDays(1)) || startDate.isAfter(LocalDate.now().plusDays(30))) {
+
+			throw new RuntimeException("Reservation date must be between tomorrow and 30 days from now");
+		}
+		// Busco que no sea superior a 3 dias la reserva la final de la inicial
+		else if (endDate.isAfter(startDate.plusDays(3))) {
+
+			throw new RuntimeException("Reservation must be 3 days from " + startDate);
+
+		}
+		// Busco que no sea superior a 30 dias la reserva
+		else if (endDate.isAfter(LocalDate.now().plusDays(30))) {
+
+			throw new RuntimeException("Reservation must be in 30 days from " + startDate);
+
+		}
+
+		return true;
+
 	}
 
+	public LocalDate convertDateToLocaldate(Date dateToConvert) {
+		return dateToConvert.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+	}
 }

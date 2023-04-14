@@ -1,4 +1,5 @@
 package co.com.alten.booking.entity;
+import java.util.Date;
 import java.util.Set;
 
 import javax.persistence.Column;

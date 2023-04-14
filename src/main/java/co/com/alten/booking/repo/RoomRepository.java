@@ -10,7 +10,13 @@ public interface RoomRepository extends JpaRepository<Room, Integer> {
 	
 	
 
-	@Query(value = "SELECT  SUBSTRING(CAST(DAY(r.fi) AS VARCHAR(2)), 1, 2) dias   FROM room ", nativeQuery = true)
-	List<Room> findRoomAvailable333();
+	@Query(value = "SELECT  idRoom, numberRoom FROM room  where status <> 'BUSY'", nativeQuery = true)
+	List<Room> findRoomAvailable();
+
+	@Query(value = "SELECT  idRoom, numberRoom FROM room  ", nativeQuery = true)
+	List<Room> getAllRoom();
+	
+	@Query(value = "SELECT  idRoom room  where status <> 'BUSY' AND numberRoom = ?", nativeQuery = true)
+	Integer findRoom(Integer numberRoom);
 
 }

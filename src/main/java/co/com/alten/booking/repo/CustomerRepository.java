@@ -1,5 +1,7 @@
 package co.com.alten.booking.repo;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -9,7 +11,7 @@ import co.com.alten.booking.entity.Customer;
 public interface CustomerRepository  extends JpaRepository <Customer,Integer> {
 	
 	
-	@Query(value = "SELECT id_Customer FROM customer c  where c.document_customer = ?", nativeQuery = true)
-	Integer findCustomer(String documentCustomer);
+	@Query(value = "SELECT idCustomer,documentCustomer,  nameCustomer,emailCustomer  FROM customer c  where c.documentCustomer = ?", nativeQuery = true)
+	Integer findCustomerDoc(String documentCustomer);
 
 }

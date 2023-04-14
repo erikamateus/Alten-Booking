@@ -37,6 +37,7 @@ public class BookingApplication {
 
 		@Override
 		protected void configure(HttpSecurity http) throws Exception {
+			http.headers().frameOptions().disable();
 			http.csrf().disable()
 				.addFilterAfter(new AuthorizacionServerConfiguration(), UsernamePasswordAuthenticationFilter.class)
 				.authorizeRequests()

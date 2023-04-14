@@ -44,6 +44,9 @@ public class Booking {
 	@Column(name = "checkOut")
 	private Date checkOut;
 	
+	@Column(name = "bookingDay")
+	private Date bookingDay;
+	
 	@Column(name = "status")
 	private String status;
 

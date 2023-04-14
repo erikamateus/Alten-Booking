@@ -9,7 +9,8 @@ import co.com.alten.booking.entity.Booking;
 public interface BookingService {
 	List<Booking> getAllBooking();
 	
-    public List<RoomAvailable> findAvailableRoom(Integer roomId, LocalDate startDate, LocalDate endDate);
-    public void createBooking(Booking booking);
+    public List<Booking> findAvailableRoom(Integer roomId, LocalDate startDate, LocalDate endDate);
+    public Booking createUpdateBooking(Booking booking);
+    public boolean dateRangeValidation( LocalDate startDate, LocalDate endDate);
 
 }

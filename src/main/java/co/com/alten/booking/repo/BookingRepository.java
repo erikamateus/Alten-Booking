@@ -43,53 +43,32 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
 	@Query(value = "SELECT count(*) FROM booking b  where b.status = 'BUSY' and b.id_customer = ?", nativeQuery = true)
 	Integer findBookingCustomer(Integer idCustomer);
 
-	// consulta final de la disponibilidad--- aver si funciona
 
-	/*
-	 * @Transactional
-	 * 
-	 * @Query("SELECT b.check_in FROM Booking b WHERE b.id_room = :roomId " +
-	 * "AND b.check_in NOT BETWEEN :startDate AND :endDate " +
-	 * "AND b.check_out NOT BETWEEN :startDate AND :endDate " +
-	 * "AND (:startDate NOT BETWEEN b.start_date AND b.end_date " +
-	 * "OR :endDate NOT BETWEEN b.check_in AND b.check_out)") List<LocalDate>
-	 * findAvailableDates4(@Param("roomId") Integer roomId, @Param("startDate")
-	 * LocalDate startDate,
-	 * 
-	 * @Param("endDate") LocalDate endDate);
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	@Query("SELECT b.id_room, b.check_in  FROM Booking b WHERE b.id_room = :roomId "
-			+ "AND NOT EXISTS (SELECT 1 FROM Booking b2 WHERE b2.id_room = :roomId AND "
-			+ "((b2.check_in <= :startDate AND b2.check_out >= :startDate) OR "
-			+ "(b2.check_in <= :endDate AND b2.check_out >= :endDate) OR "
-			+ "(b2.check_in >= :startDate AND b2.check_out <= :endDate))) "
-			+ "AND (DATEDIFF(:endDate, :startDate) < 3 OR DATEDIFF(:endDate, :startDate) >= 1)")
-	List<Booking> findAvailableDatesSql(@Param("roomId") Integer roomId, @Param("startDate") LocalDate startDate,
-			@Param("endDate") LocalDate endDate);
-
-
-	 */
 
 
 	
 	
-    @Query("SELECT b.checkIn   FROM Booking b\r\n"
-    		+ "INNER JOIN b.room r   WHERE  r.idRoom = :roomId " +
+    @Query("SELECT b.checkIn , b.checkOut  FROM Booking b \r\n"
+    		+ "  WHERE  b.idRoom = :roomId " +
             "AND b.checkIn NOT BETWEEN :startDate AND :endDate " 
       //   "AND b.checkOut NOT BETWEEN :startDate AND :endDate " +
        //  "AND (:startDate NOT BETWEEN b.start_date AND b.end_date " +
         //  "OR :endDate NOT BETWEEN b.checkIn AND b.checkOut)"
           )
      List<Booking> findAvailableDates(@Param("roomId") Integer roomId,
-                                        @Param("startDate") String startDate,
-                                        @Param("endDate") String endDate);
+                                        @Param("startDate") LocalDate startDate,
+                                        @Param("endDate") LocalDate endDate);
     
     
     
-
+	
+    @Query("SELECT b.idRoom, b.checkIn,  b.checkOut  FROM Booking b\r\n"
+    		+ " WHERE  b.idRoom   = :roomId " +
+            "AND b.checkIn BETWEEN :startDate AND :endDate " 
+          )
+    List<Booking>  existingBookings (@Param("roomId") Integer roomId,
+                                        @Param("startDate") LocalDate  startDate,
+                                        @Param("endDate") LocalDate endDate);
+    
 	
 }
