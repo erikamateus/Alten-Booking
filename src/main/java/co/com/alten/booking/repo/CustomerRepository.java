@@ -11,7 +11,7 @@ import co.com.alten.booking.entity.Customer;
 @Repository
 public interface CustomerRepository extends JpaRepository<Customer, Integer> {
 
-	@Query(value = "SELECT idCustomer,documentCustomer,  nameCustomer,emailCustomer  FROM customer c  where c.documentCustomer = ?", nativeQuery = true)
+	@Query(value = "SELECT id_Customer,document_Customer,  name_Customer,email_Customer  FROM customer c  where c.document_Customer = ?", nativeQuery = true)
 	Integer findCustomerDoc(String documentCustomer);
 
 }

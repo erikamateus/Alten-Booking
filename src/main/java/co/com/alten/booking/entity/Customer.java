@@ -10,12 +10,11 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -36,6 +35,8 @@ public class Customer {
 	@Column(name = "emailCustomer")
 	private String emailCustomer;
 
+	@JsonIgnore
+	@ToString.Exclude
 	@OneToMany(mappedBy = "customer")
 	private Set<Booking> booking;
 }

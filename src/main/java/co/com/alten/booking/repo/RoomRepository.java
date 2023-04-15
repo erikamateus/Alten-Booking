@@ -15,7 +15,7 @@ public interface RoomRepository extends JpaRepository<Room, Integer> {
 	@Query(value = "SELECT  idRoom, numberRoom FROM room  ", nativeQuery = true)
 	List<Room> getAllRoom();
 
-	@Query(value = "SELECT  idRoom room  where status <> 'BUSY' AND numberRoom = ?", nativeQuery = true)
+	@Query(value = "SELECT  id_Room FROM room  where status_Room <> 'BUSY' AND number_Room = ?", nativeQuery = true)
 	Integer findRoom(Integer numberRoom);
 
 }

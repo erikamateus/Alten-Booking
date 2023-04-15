@@ -1,5 +1,6 @@
 package co.com.alten.booking.entity;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -9,7 +10,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
@@ -37,13 +37,13 @@ public class Booking {
 	private Customer customer;
 
 	@Column(name = "checkIn")
-	private Date checkIn;
+	private LocalDate checkIn;
 
 	@Column(name = "checkOut")
-	private Date checkOut;
+	private LocalDate checkOut;
 
 	@Column(name = "bookingDay")
-	private Date bookingDay;
+	private LocalDate bookingDay = LocalDate.now();
 
 	@Column(name = "status")
 	private String status;

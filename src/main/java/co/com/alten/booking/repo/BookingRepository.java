@@ -43,7 +43,7 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
 	@Query(value = "SELECT count(*) FROM booking b  where b.status = 'BUSY' and b.id_customer = ?", nativeQuery = true)
 	Integer findBookingCustomer(Integer idCustomer);
 
-	@Query("SELECT b.checkIn , b.checkOut  FROM Booking b " + "  WHERE  b.room = :roomId "
+	@Query("SELECT b FROM Booking b " + "  WHERE  b.room.idRoom = :roomId "
 			+ "AND b.checkIn NOT BETWEEN :startDate AND :endDate "
 	// "AND b.checkOut NOT BETWEEN :startDate AND :endDate " +
 	// "AND (:startDate NOT BETWEEN b.start_date AND b.end_date " +
@@ -52,9 +52,15 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
 	List<Booking> findAvailableDates(@Param("roomId") Integer roomId, @Param("startDate") LocalDate startDate,
 			@Param("endDate") LocalDate endDate);
 
-	@Query("SELECT b.room, b.checkIn,  b.checkOut  FROM Booking b" + " WHERE  b.room   = :roomId "
+	@Query("SELECT b.room, b.checkIn,  b.checkOut  FROM Booking b" + " WHERE  b.room.idRoom   = :roomId "
 			+ "AND b.checkIn BETWEEN :startDate AND :endDate ")
 	List<Booking> existingBookings(@Param("roomId") Integer roomId, @Param("startDate") LocalDate startDate,
 			@Param("endDate") LocalDate endDate);
+
+
+	@Query("SELECT count(b) FROM Booking b" + " WHERE  b.room.idRoom   = :roomId "
+			+ "AND b.checkIn BETWEEN :startDate AND :endDate ")
+	Integer existingBookingsIn(@Param("roomId") Integer roomId, @Param("startDate") LocalDate startDate,
+								   @Param("endDate") LocalDate endDate);
 
 }

@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+
+import co.com.alten.booking.dto.AvailableDatesDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -34,22 +36,19 @@ public class ControllerApiAlten {
 	@Autowired
 	private CustomerService customerService;
 
-	@GetMapping("/{roomId}/available-dates")
-	public ResponseEntity<ResponseHTTP> getAvailableRoom(@PathVariable Integer numberRoom,
-			@PathVariable String documentCustomer,
-			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+	@PostMapping("/{roomId}/available-dates")
+	public ResponseEntity<ResponseHTTP> getAvailableRoom(@PathVariable Integer roomId,
+			@RequestBody AvailableDatesDto availableDatesDto) {
 
 		List<Booking> availableDates = new ArrayList<>();
-		Integer roomId = null;
+//		Integer roomId = null;
 		Integer idCustomer = null;
 
 		try {
-
-			roomId = roomService.findRoom(numberRoom);
-			idCustomer = customerService.findCustomerDoc(documentCustomer);
+			roomId = roomService.findRoom(roomId);
+			idCustomer = customerService.findCustomerDoc(availableDatesDto.getDocumentCustomer());
 			bookingService.findBookingCustomer(idCustomer);
-			availableDates = bookingService.findAvailableRoom(roomId, startDate, endDate);
+			availableDates = bookingService.findAvailableRoom(roomId, availableDatesDto.getStartDate(), availableDatesDto.getEndDate());
 
 		} catch (Exception e) {
 			return new ResponseEntity<>(new ResponseHTTP(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage()),

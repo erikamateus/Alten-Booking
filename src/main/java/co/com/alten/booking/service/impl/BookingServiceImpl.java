@@ -52,19 +52,25 @@ public class BookingServiceImpl implements BookingService {
 			LocalDate todayDate = LocalDate.now();
 			LocalDate endDate30Days = todayDate.plusDays(30);
 			List<Booking> existDatesBoookings = bookingService.findAvailableDates(room, startDate, endDate30Days);
-			if (!isAvailableRoom(room, startDate, endDate)) {
+			if (isAvailableRoom(room, startDate, endDate)) {
 				for (Booking BusyBooking : existDatesBoookings) {
-					if (isAvailableRoom(BusyBooking.getRoom().getIdRoom(),
-							convertDateToLocaldate(BusyBooking.getCheckIn()),
-							convertDateToLocaldate(BusyBooking.getCheckOut()))) {
-						// lleno la lista con los que no se pueden
+					if (!isAvailableRoom(BusyBooking.getRoom().getIdRoom(),
+							BusyBooking.getCheckIn(),
+							BusyBooking.getCheckOut())) {
 						excludedDays.add(BusyBooking);
 					} else {
 						reservedDates.add(BusyBooking);
-						// lleno la lista con los que SI se pueden
+						// dias que no se pueden llenar
 					}
 				}
 			} else {
+				if (existDatesBoookings.isEmpty()) {
+					throw new RuntimeException(
+							String.format("Please create of booking with this parameters: " +
+									"startDate: %s endDate: %s", startDate, endDate
+							)
+					);
+				}
 				throw new RuntimeException("Room is not available for the requested dates");
 			}
 
@@ -76,8 +82,16 @@ public class BookingServiceImpl implements BookingService {
 
 	private boolean isAvailableRoom(Integer room, LocalDate startDate, LocalDate endDate) {
 		// busco si existe el dia con los parametros
-		List<Booking> existDatesBoookings = bookingService.existingBookings(room, startDate, endDate);
-		return existDatesBoookings.isEmpty();
+
+		try {
+//			List<Booking> existDatesBoookings = bookingService.existingBookings(room, startDate, endDate);
+//			return existDatesBoookings.isEmpty();
+			Integer existDatesBoookings;
+			existDatesBoookings = bookingService.existingBookingsIn(room, startDate, endDate);
+			return existDatesBoookings > 0;
+		} catch (Exception e) {
+			throw new RuntimeException("Room is not available for the requested dates invalid");
+		}
 		// validar entrada de datos. no mas de 3 dias en reservar, y no mayor a 30 dias
 		// los dias que puede seleccionar
 
@@ -86,8 +100,8 @@ public class BookingServiceImpl implements BookingService {
 	@Override
 	public Booking createUpdateBooking(Booking booking) {
 
-		if (!isAvailableRoom(booking.getRoom().getIdRoom(), convertDateToLocaldate(booking.getCheckIn()),
-				convertDateToLocaldate(booking.getCheckOut()))) {
+		if (booking.getRoom() == null || !isAvailableRoom(booking.getRoom().getIdRoom(), booking.getCheckIn(),
+				booking.getCheckOut())) {
 			throw new RuntimeException("Room is not available for the requested dates");
 		}
 
@@ -120,7 +134,7 @@ public class BookingServiceImpl implements BookingService {
 
 	}
 
-	public LocalDate convertDateToLocaldate(Date dateToConvert) {
+	public static LocalDate convertDateToLocaldate(Date dateToConvert) {
 		return dateToConvert.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 	}
 

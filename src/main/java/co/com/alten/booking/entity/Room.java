@@ -11,12 +11,11 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -26,14 +25,16 @@ public class Room {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int idRoom;
+	private Integer idRoom;
 
 	@Column(name = "numberRoom")
-	private int numberRoom;
+	private Integer numberRoom;
 
-	@Column(name = "StatusRoom")
-	private String StatusRoom;
+	@Column(name = "statusRoom")
+	private String statusRoom;
 
+	@JsonIgnore
+	@ToString.Exclude
 	@OneToMany(mappedBy = "room")
 	private Set<Booking> booking;
 

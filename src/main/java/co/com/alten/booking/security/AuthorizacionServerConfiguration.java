@@ -1,6 +1,9 @@
 package co.com.alten.booking.security;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -9,6 +12,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import co.com.alten.booking.service.impl.BookingServiceImpl;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -32,6 +36,7 @@ public class AuthorizacionServerConfiguration extends OncePerRequestFilter {
 		try {
 			if (existeJWTToken(request, response)) {
 				Claims claims = validateToken(request);
+				claims.setExpiration(java.sql.Date.valueOf(LocalDate.now().plusDays(1)));
 				if (claims.get("authorities") != null) {
 					setUpSpringAuthentication(claims);
 				} else {

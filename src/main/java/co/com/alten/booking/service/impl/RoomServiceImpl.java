@@ -25,12 +25,16 @@ public class RoomServiceImpl implements RoomService {
 		roomService.save(room);
 	}
 
-	public void deleteRoom(Integer idRoom) {
-		roomService.deleteById(idRoom);
-	}
-
-	public Integer findRoom(Integer numberRoom) {
-		return roomService.findRoom(numberRoom);
-	}
-
+    public void deleteRoom(Integer idRoom) {
+    	roomService.deleteById(idRoom);
+    }
+    
+   public Integer findRoom(Integer numberRoom) {
+       try {
+           return roomService.findRoom(numberRoom);
+       } catch (Exception e) {
+           throw new RuntimeException("Not found numberRoom");
+       }
+    }
+	
 }
