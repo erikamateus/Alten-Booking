@@ -9,28 +9,28 @@ import co.com.alten.booking.service.RoomService;
 
 @Service
 public class RoomServiceImpl implements RoomService {
-	
+
 	@Autowired
 	private RoomRepository roomService;
-	
-	public List<Room> getAllRoom(){
+
+	public List<Room> getAllRoom() {
 		return roomService.findAll();
-			}
-	
+	}
+
 	public Room getRoomById(Integer idRoom) {
-        return roomService.findById(idRoom).orElse(null);
-    }
+		return roomService.findById(idRoom).orElse(null);
+	}
 
-    public void saveRoom(Room room) {
-    	roomService.save(room);
-    }
+	public void saveRoom(Room room) {
+		roomService.save(room);
+	}
 
-    public void deleteRoom(Integer idRoom) {
-    	roomService.deleteById(idRoom);
-    }
-    
-   public Integer findRoom(Integer numberRoom){
-        return roomService.findRoom(numberRoom);
-    }
-	
+	public void deleteRoom(Integer idRoom) {
+		roomService.deleteById(idRoom);
+	}
+
+	public Integer findRoom(Integer numberRoom) {
+		return roomService.findRoom(numberRoom);
+	}
+
 }

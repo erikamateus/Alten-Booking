@@ -3,8 +3,6 @@ package co.com.alten.booking;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-
-
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -14,10 +12,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import co.com.alten.booking.security.AuthorizacionServerConfiguration;
 
-
-
-
-
 @SpringBootApplication
 public class BookingApplication {
 
@@ -25,12 +19,10 @@ public class BookingApplication {
 		SpringApplication.run(BookingApplication.class, args);
 	}
 
-	
-	
 	public static void main2(String[] args) {
 		SpringApplication.run(BookingApplication.class, args);
 	}
-	
+
 	@EnableWebSecurity
 	@Configuration
 	class WebSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -39,11 +31,9 @@ public class BookingApplication {
 		protected void configure(HttpSecurity http) throws Exception {
 			http.headers().frameOptions().disable();
 			http.csrf().disable()
-				.addFilterAfter(new AuthorizacionServerConfiguration(), UsernamePasswordAuthenticationFilter.class)
-				.authorizeRequests()
-				.antMatchers(HttpMethod.POST, "/user").permitAll()
-				.antMatchers("/h2-console/**").permitAll()
-				.anyRequest().authenticated();
+					.addFilterAfter(new AuthorizacionServerConfiguration(), UsernamePasswordAuthenticationFilter.class)
+					.authorizeRequests().antMatchers(HttpMethod.POST, "/user").permitAll().antMatchers("/h2-console/**")
+					.permitAll().anyRequest().authenticated();
 		}
 	}
 }

@@ -1,4 +1,5 @@
 package co.com.alten.booking.entity;
+
 import java.util.Date;
 import java.util.Set;
 
@@ -15,25 +16,24 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name="room")
+@Table(name = "room")
 public class Room {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int idRoom;
-	
+
 	@Column(name = "numberRoom")
 	private int numberRoom;
-	
+
 	@Column(name = "StatusRoom")
 	private String StatusRoom;
-	
+
 	@OneToMany(mappedBy = "room")
 	private Set<Booking> booking;
 

@@ -14,19 +14,19 @@ import javax.persistence.Table;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name="apiconfiguration")
+@Table(name = "apiconfiguration")
 public class ApiConfiguration {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-private int	idApi;	
-	
+	private int idApi;
+
 	@Column(name = "nameApi")
-private String	nameApi;
-	
+	private String nameApi;
+
 	@Column(name = "detail")
-private String detail;
-	
+	private String detail;
+
 	@Column(name = "value")
-private String value;
+	private String value;
 }

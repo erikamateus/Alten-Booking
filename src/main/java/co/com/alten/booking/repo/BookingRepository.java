@@ -43,32 +43,18 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
 	@Query(value = "SELECT count(*) FROM booking b  where b.status = 'BUSY' and b.id_customer = ?", nativeQuery = true)
 	Integer findBookingCustomer(Integer idCustomer);
 
+	@Query("SELECT b.checkIn , b.checkOut  FROM Booking b " + "  WHERE  b.room = :roomId "
+			+ "AND b.checkIn NOT BETWEEN :startDate AND :endDate "
+	// "AND b.checkOut NOT BETWEEN :startDate AND :endDate " +
+	// "AND (:startDate NOT BETWEEN b.start_date AND b.end_date " +
+	// "OR :endDate NOT BETWEEN b.checkIn AND b.checkOut)"
+	)
+	List<Booking> findAvailableDates(@Param("roomId") Integer roomId, @Param("startDate") LocalDate startDate,
+			@Param("endDate") LocalDate endDate);
 
+	@Query("SELECT b.room, b.checkIn,  b.checkOut  FROM Booking b" + " WHERE  b.room   = :roomId "
+			+ "AND b.checkIn BETWEEN :startDate AND :endDate ")
+	List<Booking> existingBookings(@Param("roomId") Integer roomId, @Param("startDate") LocalDate startDate,
+			@Param("endDate") LocalDate endDate);
 
-
-	
-	
-    @Query("SELECT b.checkIn , b.checkOut  FROM Booking b \r\n"
-    		+ "  WHERE  b.idRoom = :roomId " +
-            "AND b.checkIn NOT BETWEEN :startDate AND :endDate " 
-      //   "AND b.checkOut NOT BETWEEN :startDate AND :endDate " +
-       //  "AND (:startDate NOT BETWEEN b.start_date AND b.end_date " +
-        //  "OR :endDate NOT BETWEEN b.checkIn AND b.checkOut)"
-          )
-     List<Booking> findAvailableDates(@Param("roomId") Integer roomId,
-                                        @Param("startDate") LocalDate startDate,
-                                        @Param("endDate") LocalDate endDate);
-    
-    
-    
-	
-    @Query("SELECT b.idRoom, b.checkIn,  b.checkOut  FROM Booking b\r\n"
-    		+ " WHERE  b.idRoom   = :roomId " +
-            "AND b.checkIn BETWEEN :startDate AND :endDate " 
-          )
-    List<Booking>  existingBookings (@Param("roomId") Integer roomId,
-                                        @Param("startDate") LocalDate  startDate,
-                                        @Param("endDate") LocalDate endDate);
-    
-	
 }

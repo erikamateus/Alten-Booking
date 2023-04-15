@@ -30,12 +30,22 @@ public class CustomerServiceImpl implements CustomerService {
 	public void deleteCustomer(Integer idCustomer) {
 		customerrService.deleteById(idCustomer);
 	}
-	
-	public Integer findCustomerDoc(String documentCustomer)
-	{
-		 Integer idCustomer= customerrService.findCustomerDoc(documentCustomer);
-		 
-		 return idCustomer;
+
+	public Integer findCustomerDoc(String documentCustomer) {
+		Integer idCustomer = null;
+
+		if (documentCustomer != null) {
+			idCustomer = customerrService.findCustomerDoc(documentCustomer);
+
+			if (idCustomer == null) {
+				throw new RuntimeException(
+						"Not Exist Customer with this ID:" + documentCustomer + "Please. Firts: Create the Customer");
+			}
+		} else {
+			throw new RuntimeException("Please; to make a Booking we need the ID. Create the Customer");
+
+		}
+		return idCustomer;
 	}
 
 }

@@ -83,8 +83,6 @@ public class BookingServiceImpl implements BookingService {
 
 	}
 
-
-
 	@Override
 	public Booking createUpdateBooking(Booking booking) {
 
@@ -124,5 +122,22 @@ public class BookingServiceImpl implements BookingService {
 
 	public LocalDate convertDateToLocaldate(Date dateToConvert) {
 		return dateToConvert.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+	}
+
+	public void findBookingCustomer(Integer idCustomer) {
+		Integer idfndCustomer = null;
+
+		if (idCustomer != null) {
+
+			idfndCustomer = bookingService.findBookingCustomer(idCustomer);
+
+			if (idfndCustomer > 0) {
+				throw new RuntimeException("The Customer  has an active Booking. ");
+			}
+		} else {
+			throw new RuntimeException("Create the Customer.");
+
+		}
+
 	}
 }

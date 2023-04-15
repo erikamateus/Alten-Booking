@@ -17,19 +17,17 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
-
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name="booking")
+@Table(name = "booking")
 public class Booking {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int idBooking;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "idRoom")
 	private Room room;
@@ -37,16 +35,16 @@ public class Booking {
 	@ManyToOne
 	@JoinColumn(name = "idCustomer")
 	private Customer customer;
-	
+
 	@Column(name = "checkIn")
 	private Date checkIn;
-	
+
 	@Column(name = "checkOut")
 	private Date checkOut;
-	
+
 	@Column(name = "bookingDay")
 	private Date bookingDay;
-	
+
 	@Column(name = "status")
 	private String status;
 

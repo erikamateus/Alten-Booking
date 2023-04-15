@@ -1,4 +1,5 @@
 package co.com.alten.booking.entity;
+
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -14,30 +15,27 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name="customer")
+@Table(name = "customer")
 public class Customer {
 
-	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int idCustomer;
-	
+
 	@Column(name = "documentCustomer")
-	private String	documentCustomer;
-	
+	private String documentCustomer;
+
 	@Column(name = "nameCustomer")
-	private String	nameCustomer;
-	
-	
+	private String nameCustomer;
+
 	@Column(name = "emailCustomer")
-	private String	emailCustomer;
-	
+	private String emailCustomer;
+
 	@OneToMany(mappedBy = "customer")
-	 private Set<Booking> booking;
+	private Set<Booking> booking;
 }
